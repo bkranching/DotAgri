@@ -57,14 +57,47 @@ function database_open()
 	}
 }
 
-function valid_domain ($domain)
+function valid_domain ($domain, ...&$errs)
 {
 	global $specialNamesOpenNIC, $specialNamesRFC6761, $specialNamesIANA, $specialNamesDNS;
-	(preg_match($specialNamesOpenNIC, $domain)) || 
-		(preg_match($specialNamesRFC6761, $domain)) || 
-		(preg_match($specialNamesIANA, $domain)) || 
-		(preg_match($specialNamesDNS, $domain))
-	? return 0 : return 1;	// user is trying to take an special name
+	$domain = strtolower($domain);
+	if ( ! preg_match('/^[a-z0-9\-_]+(\.[a-z0-9\-_]+)*$/', $domain) )
+	{
+		$errs[0] = "Domain names may only include a-z0-9.-_";
+		return 0;
+	}
+	if ( strlen($domain) <= 0 || strlen($domain) > 253 ) // Domain name labels limit=63 and uri limit=253 octects see RFC1035
+	{
+		$errs[0] = "Sorry, domain names must contain at least 1 character and be no longer than 253 characters.";
+		return 0;
+	}
+	if ( preg_match('/[a-z0-9\-_]{64}/', $domain)
+	{
+		$errs[0] = "Each label in a domain name must be 63 or fewer characters";
+		return 0;
+	}
+	if(preg_match('/^[a-zA-Z]{2}$/', $name)) 
+	{
+		$errs[0] = "ISO 3166 country codes are reserved at this time.";
+		return 0;
+	}
+	if(preg_match($specialNamesRFC6761, $name)) 
+	{
+		$errs[0] = "Domain names must not contain special DNS names as specified in RFC6761.";
+		return 0;
+	}
+	if(preg_match($specialNamesIANA, $name)) 
+	{
+		$errs[0] = "Sorry, we do not want to mess with ICANN or IANA special DNS names.<br>\n"; 
+		$errs[0] .= "See: http://www.icann.org/en/about/agreements/registries/unsponsored/registry-agmt-appk-26apr01-en.htm<br>\n";
+		return 0;
+	}
+	if ( preg_match($specialNamesOpenNIC, $domain) || preg_match($specialNamesDNS, $domain) )
+	{
+		$errs[0] = "That domain is reserved by administration";
+		return 0;
+	}
+	return 1;	// user is trying to take an special name
 }
 
 function domain_taken($domain)

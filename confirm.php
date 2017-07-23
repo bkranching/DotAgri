@@ -12,37 +12,68 @@ include("funtions.inc");
 if(isset($_REQUEST['username']))
 {
 	$username=$_REQUEST['username'];
-	if(isset($_REQUEST['userkey']))
+	isset($_REQUEST['email']) ? $email = $_REQUEST['email'] : display_error("email required.");
+	isset($_REQUEST['userkey']) ? $userkey=$_REQUEST['userkey'] : display_error("Userkey required.");
+
+	if ( ! valid_username($username)
 	{
-		$userkey=$_REQUEST['userkey'];
-	} 
-	else 
-	{
-		display_error("Userkey required.");
-	}
-	$clean_username=clean_up_input($username);
-	if(username_taken($clean_username)==0)
-	{
-		display_error("Sorry, that username does not exist.");
+		display_error("Invalid username");
 	}
 
-	$myFile = "tmp/".$clean_username.".ukf";
-	$fh = fopen($myFile, 'r') or die("Can't open user key verification.");
-	$theData=fread($fh,filesize($myFile));
-	fclose($fh);
-	if($theData != $userkey)
+	$dbh = database_open();
+	$stmt = $dbh->prepare("SELECT * FROM users WHERE username = :user LIMIT 1");
+	$stmt->bindParam(':user', $username);
+	$stmt->execute();
+	$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+	if ( ! defined($user['id'] )
+	{
+		display_error("No such user: $username");
+	}
+
+	$stmt = $dbh->prepare("SELECT * FROM contacts WHERE user_id = :user LIMIT 1");
+	$stmt->bindParam(':user', $user['id']);
+	$stmt->execute();
+	$contact_arr = $stmt->fetchALL();
+
+	$contact = '';
+	foreach ($contact_arr as $contact_e)
+	{
+		if ( $contact_e['email'] == $email )
+		{
+			$contact = $contact_e;
+			break;
+		}
+	}
+	if ( $contact == '' )
+	{
+		display_error("Error: no matching email address ($email) for user $username was found");
+	}
+
+	if ( $contact['verification_token'] == $userkey )
+	{
+		$stmt = $dbh->prepare("UPDATE contacts SET verified=1 WHERE id = :id");
+		$stmt->bindParam(':id', $contact['id']);
+		$stmt->execute();
+
+		show_header();
+		echo "Your email for ".$email." is now confirmed.";
+
+		/* Verify user account if this is their admin contact */
+		if ( $user['admin_contact'] == $contact['id'] )
+		{
+			$stmt = $dbh->prepare("UPDATE users SET verified=1 WHERE id = :id");
+			$stmt->bindParam(':id', $user['id']);
+			$stmt->execute();
+			echo "Your account for $username is now verified.  ";
+			echo "You may now login using the link above to start registering domains.";
+		} 
+		show_footer();
+	}
+	else
 	{
 		display_error("Invalid user key.");
 	}
-	unlink($myFile);
-
-	$base=database_open_now($tld_db, 0666);
-	$query = "UPDATE users SET verified=1 WHERE username='".$clean_username."'";
-	database_query_now($base, $query);
-
-	show_header();
-	echo "Your account for ".$clean_username." is now confirmed. You may now login using the link above to start registering domains.";
-	show_footer();
 } 
 else 
 {

@@ -1,44 +1,12 @@
 <?php
 include("regnum.cfg");
 include("functions.inc");
+sec_session_start();
 
 function check_domain($domain)
 {
 	global $TLD, $specialNamesRFC6761, $specialNamesIANA;
-	/* sanity check the domain */
-	$name=htmlspecialchars(stripslashes($domain));
-	$name=preg_replace("/[^a-zA-Z0-9\-]/","", $name); /* replace characters we do not want */
-	$name=preg_replace('/^[\-]+/','',$name); /* remove starting hyphens */
-	$name=preg_replace('/[\-]+$/','',$name); /* remove ending hyphens */
-	$name=str_replace(" ", "", $name); /* remove spaces */
-	$name=str_replace("--", "-", $name); /* remove double hyphens */
 	$name=strtolower($name); /* all lower case to remove confusion */
-	if( (strlen($name)<=0) || (strlen($name)>63))	/* Domain name labels limit=63 and uri limit=253 octects see RFC1035 */
-	{
-		echo "Sorry, domain names must contain at least 1 character and be no longer than 253 characters.";	// >2 ISO 3166 reserved for country codes
-		echo "Please go back and try again.";
-		return;
-	}
-	if(preg_match('/^[a-zA-Z]{2}$/', $name)) 
-	{
-		echo "ISO 3166 country codes are reserved at this time.";
-		echo "Please go back and try again.";
-		return;
-	}
-	if(preg_match($specialNamesRFC6761, $name)) 
-	{
-		echo "Sorry, domain names must not contain special DNS names as specified in RFC6761.";
-		echo "Please go back and try again.";
-		return;
-	}
-	if(preg_match($specialNamesIANA, $name)) 
-	{
-		echo "Sorry, we do not want to mess with ICANN or IANA special DNS names.<br>\n"; 
-		echo "See: http://www.icann.org/en/about/agreements/registries/unsponsored/registry-agmt-appk-26apr01-en.htm<br>\n";
-		echo "Please go back and try again.\n";
-		return;
-	}
-	if(strlen($name)>0)
 	{
 		echo "Checking <b>".$name.".".$TLD."</b> for you...";
 		if(domain_taken($name))
