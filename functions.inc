@@ -1,5 +1,6 @@
 <?php
 include("regnum.cfg");
+date_default_timezone_set('Etc/UTC');
 
 function sec_session_start() 
 {
@@ -29,7 +30,7 @@ function login_check ()
 	$stmt = $dbh->prepare("SELECT password FROM users WHERE id = :id LIMIT 1");
 	$stmt->bindParam(':id', $user_id);
 	$stmt->execute();
-	$results = $stmt->fetch();
+	$results = $stmt->fetch(PDO::FETCH_ASSOC);
 
 	if ( $results['password'] ) 
 	{
@@ -232,7 +233,7 @@ function validatePGP($pgpkey)
 	return 1;
 }
 
-function generatePassword($length = 8) 
+function generate_password($length = 8) 
 {
     $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     $count = mb_strlen($chars);

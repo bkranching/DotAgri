@@ -20,7 +20,6 @@ create table users (
 	id INTEGER PRIMARY KEY,
 	username VARCHAR(32) NOT NULL,
 	password VARCHAR(255) NOT NULL,
-	name VARCHAR(255) NOT NULL,
 	admin_contact INTEGER NOT NULL,
 	registered DATE NOT NULL,
 	verified INTEGER NOT NULL
@@ -30,7 +29,7 @@ create table contacts (
 	id INTEGER PRIMARY KEY,
 	user_id INTEGER NOT NULL,
 	email_address VARCHAR(255),
-	pgpkey VARCHAR(8192),
+	pgp_key VARCHAR(8192),
 	verified INTEGER NOT NULL,
 	verification_token INTEGER
 );
