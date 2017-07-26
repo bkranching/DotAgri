@@ -1,3 +1,6 @@
+CREATE ROLE regnum LOGIN PASSWORD = %%%password%%%;
+CREATE DATABASE regnum WITH OWNER = "regnum" ENCODING = UTF8;
+
 CREATE TABLE tlds (
 	id INTEGER PRIMARY KEY,
 	name VARCHAR(63) NOT NULL,
@@ -23,6 +26,7 @@ create table users (
 	admin_contact INTEGER NOT NULL,
 	registered DATE NOT NULL,
 	verified INTEGER NOT NULL
+	is_admin BOOLEAN DEFAULT false,
 );
 
 create table contacts (
@@ -34,11 +38,17 @@ create table contacts (
 	verification_token INTEGER
 );
 
+create table tokens (
+	id INTEGER PRIMARY KEY,
+	user_id INTEGER NOT NULL,
+	token VARCHAR(255) NOT NULL,
+);
+
 --See: RFC 1035
 create table records (
 	id INTEGER PRIMARY KEY,
 	domain_id INTEGER NOT NULL,
-	name VARCHAR(63) NOT NULL,
+	name VARCHAR(255) NOT NULL, --total length, with .'s in place of length octets
 	record_type INTEGER NOT NULL,
 	record_class INTEGER NOT NULL, 
 	ttl INTEGER DEFAULT 7200,

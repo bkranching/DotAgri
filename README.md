@@ -22,4 +22,13 @@ Do user and domain pages
 make real db schema
 Purge old functions
 improve SQL handling
+test with php7
+</pre>
+
+Dependencies:
+
+<pre>
+postgresql-server95+ (any version should do)
+php56
+php56-pdo-pgsql
 </pre>

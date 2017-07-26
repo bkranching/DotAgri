@@ -68,7 +68,7 @@ function valid_domain ($domain, ...&$errs)
 		$errs[0] = "Domain names may only include a-z0-9.-_";
 		return 0;
 	}
-	if ( strlen($domain) <= 0 || strlen($domain) > 253 ) // Domain name labels limit=63 and uri limit=253 octects see RFC1035
+	if ( strlen($domain) <= 0 || strlen($domain) > 255 ) // Domain name labels limit=63 and uri limit=253 octects see RFC1035
 	{
 		$errs[0] = "Sorry, domain names must contain at least 1 character and be no longer than 253 characters.";
 		return 0;
