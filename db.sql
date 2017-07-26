@@ -1,5 +1,6 @@
-CREATE ROLE regnum LOGIN PASSWORD = %%%password%%%;
-CREATE DATABASE regnum WITH OWNER = "regnum" ENCODING = UTF8;
+CREATE ROLE regnum LOGIN PASSWORD 'defaultpass';
+CREATE DATABASE regnum WITH OWNER 'regnum' ENCODING 'UTF8';
+\connect regnum
 
 CREATE TABLE tlds (
 	id INTEGER PRIMARY KEY,
@@ -25,8 +26,8 @@ create table users (
 	password VARCHAR(255) NOT NULL,
 	admin_contact INTEGER NOT NULL,
 	registered DATE NOT NULL,
-	verified INTEGER NOT NULL
-	is_admin BOOLEAN DEFAULT false,
+	verified INTEGER NOT NULL,
+	is_admin BOOLEAN DEFAULT false
 );
 
 create table contacts (
@@ -41,7 +42,7 @@ create table contacts (
 create table tokens (
 	id INTEGER PRIMARY KEY,
 	user_id INTEGER NOT NULL,
-	token VARCHAR(255) NOT NULL,
+	token VARCHAR(255) NOT NULL
 );
 
 --See: RFC 1035
