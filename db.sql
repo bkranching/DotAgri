@@ -2,7 +2,7 @@ CREATE TABLE tlds (
 	id INTEGER PRIMARY KEY,
 	name VARCHAR(63) NOT NULL,
 	allow_register INTEGER DEFAULT 1
-)
+);
 	
 CREATE TABLE domains (
 	id INTEGER PRIMARY KEY,

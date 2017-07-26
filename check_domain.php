@@ -1,5 +1,4 @@
 <?php
-include("regnum.cfg");
 include("functions.inc");
 sec_session_start();
 
@@ -12,7 +11,9 @@ function check_domain($domain)
 		if(domain_taken($name))
 		{
 			echo "<font color=\"#ff0000\"><b>Taken</b></font><BR><BR>Sorry, that name is already taken.";
-		} else {
+		} 
+		else 
+		{
 			echo "<font color=\"#008000\"><b>Available!</b></font>\n";
 			echo "<BR><BR>Congratulations! <b>".$name.".".$TLD."</b> is available.\n";
 			echo "Would you like to register it now?\n";

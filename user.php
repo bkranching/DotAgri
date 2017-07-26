@@ -6,7 +6,6 @@
    Made for the OpenNIC Project.
    http://www.mchomenet.info/mud4tld.html
 */
-include("regnum.cfg");
 include("functions.inc");
 sec_session_start();
 if ( ! check_login() )

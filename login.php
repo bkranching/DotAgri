@@ -1,12 +1,4 @@
 <?php
-/*
-   MUD4TLD - Martin's User and Domain system for Top Level Domains.
-   Written 2012-2014 By Martin COLEMAN.
-   This software is hereby dedicated to the public domain.
-   Made for the OpenNIC Project.
-   http://www.mchomenet.info/mud4tld.html
-*/
-include("regnum.cfg");
 include("functions.inc");
 sec_session_start();
 
@@ -175,7 +167,7 @@ function register ($username, $email, $password)
 	show_footer();
 }
 
-/* Main entry point */
+show_header();
 if(isset($_REQUEST['action']))
 {
 	$action=$_REQUEST['action'];
@@ -218,8 +210,6 @@ if(isset($_REQUEST['action']))
 			display_error("Invalid sub-command.");
 	}
 }
-
-show_header();
 ?>
 
 <form action="login.php" method="post">

@@ -17,6 +17,7 @@ function sec_session_start()
 	session_start();            // Start the PHP session 
 	session_regenerate_id();    // regenerated the session, delete the old one. 
 }
+
 function login_check () 
 {
 	(isset($_SESSION['user_id'], $_SESSION['username'], $_SESSION['login_string'])) ?: return 0;
@@ -141,7 +142,7 @@ function show_header()
 	{
 		echo "<p align=\"right\">Already have an account? <a href=\"user.php?action=frm_login\">Log in</a> or <a href=\"user.php?action=frm_register\">Register</a></p>\n";
 	} else {
-		echo "<p align=\"right\">Hello <b style=\"color: red;\">".$_SESSION['username']."</b>! [<a href=\"user.php?action=view_account\">My Account</a>]&nbsp;[<a href=\"logout.php\">Logout</a>].</p>\n";
+		echo "<p align=\"right\">Hello <b style=\"color: red;\">".$_SESSION['username']."</b>! [<a href=\"user.php\">My Account</a>]&nbsp;[<a href=\"logout.php\">Logout</a>]</p>\n";
 	}
 }
 
@@ -154,21 +155,9 @@ function show_footer ()
 
 function display_error ($string)
 {
-	show_header();
 	echo "Error: $string <br>\n";
 	show_footer();
 	die();
-}
-
-function clean_up_input($str)
-{
-	$new_str=htmlspecialchars(stripslashes($str));
-	$new_str=preg_replace("/[^a-zA-Z0-9\-]/","", $new_str); /* replace characters we do not want */
-	$new_str=preg_replace('/^[\-]+/','',$new_str); /* remove starting hyphens */
-	$new_str=preg_replace('/[\-]+$/','',$new_str); /* remove ending hyphens */
-	$new_str=str_replace(" ", "", $new_str); /* remove spaces */
-	$new_str=strtolower($new_str); /* all lower case to remove confusion */
-	return $new_str;
 }
 
 //function to validate ip address format in php by Roshan Bhattarai(http://roshanbh.com.np)
