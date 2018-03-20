@@ -1,6 +1,6 @@
 # regnum
 
-Registration system for .chan
+Registration system for .Agri
 
 Written by Verax
 
@@ -17,12 +17,11 @@ This program is free software released under the ISC license.  See LICENSE for m
 TODO list:
 
 <pre>
-Fix everything
-Do user and domain pages
-make real db schema
-Purge old functions
-improve SQL handling
-test with php7
+Make useable 
+Currebt error rates are worse 
+In the fork we forked.. If that
+Makes forking sence
+
 </pre>
 
 Dependencies:
